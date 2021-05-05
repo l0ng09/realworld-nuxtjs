@@ -1,0 +1,21 @@
+{
+	"name": "nuxt-demo",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"dev": "nuxt",
+		"build": "nuxt build",
+		"start": "nuxt start"
+	},
+	"devDependencies": {
+		"nuxt": "^2.15.4"
+	},
+	"dependencies": {
+		"axios": "^0.21.1",
+		"cookieparser": "^0.1.0",
+		"dayjs": "^1.10.4",
+		"js-cookie": "^2.2.1",
+		"markdown-it": "^12.0.6"
+	}
+}
