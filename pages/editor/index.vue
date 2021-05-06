@@ -1,46 +1,88 @@
 <template>
   <div class="editor-page">
-  <div class="container page">
-    <div class="row">
-
-      <div class="col-md-10 offset-md-1 col-xs-12">
-        <form>
-          <fieldset>
-            <fieldset class="form-group">
-                <input type="text" class="form-control form-control-lg" placeholder="Article Title">
-            </fieldset>
-            <fieldset class="form-group">
-                <input type="text" class="form-control" placeholder="What's this article about?">
-            </fieldset>
-            <fieldset class="form-group">
-                <textarea class="form-control" rows="8" placeholder="Write your article (in markdown)"></textarea>
-            </fieldset>
-            <fieldset class="form-group">
-                <input type="text" class="form-control" placeholder="Enter tags"><div class="tag-list"></div>
-            </fieldset>
-            <button class="btn btn-lg pull-xs-right btn-primary" type="button">
+    <div class="container page">
+      <div class="row">
+        <div class="col-md-10 offset-md-1 col-xs-12">
+          <form @submit.prevent="submitArticle">
+            <fieldset>
+              <fieldset class="form-group">
+                <input
+                  type="text"
+                  class="form-control form-control-lg"
+                  placeholder="Article Title"
+                  v-model="article.title"
+                  required
+                />
+              </fieldset>
+              <fieldset class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="What's this article about ?"
+                  v-model="article.description"
+                  required
+                />
+              </fieldset>
+              <fieldset class="form-group">
+                <textarea
+                  class="form-control"
+                  rows="8"
+                  placeholder="Write your article ( in markdown )"
+                  v-model="article.body"
+                  required
+                ></textarea>
+              </fieldset>
+              <fieldset class="form-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder='Multiple tags split with " , "'
+                  v-model="article.tagList"
+                />
+                <div class="tag-list"></div>
+              </fieldset>
+              <button class="btn btn-lg pull-xs-right btn-primary">
                 Publish Article
-            </button>
-          </fieldset>
-        </form>
+              </button>
+            </fieldset>
+          </form>
+        </div>
       </div>
-
     </div>
   </div>
-</div>
 </template>
 
 <script>
+import { addArticle } from '@/api/article';
 export default {
-    middleware: 'authenticated',
-    name: 'EditorPage',
+  middleware: 'authenticated',
+  name: 'EditorPage',
   data() {
     return {
-
+      article: {
+        title: '',
+        description: '',
+        body: '',
+        tagList: "",
+      }
     }
   },
+  methods: {
+    async submitArticle() {
+      this.article.tagList = this.article.tagList.split(',')
+      const { data } = await addArticle({ article: this.article })
+      const { article } = data || {}
+      if (article && article.slug) {
+        this.$router.push({
+          name: 'article',
+          params: {
+            slug: article.slug
+          }
+        })
+      }
+    }
+  }
 }
 </script>
 <style scoped>
-
 </style>
