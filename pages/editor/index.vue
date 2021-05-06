@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { addArticle } from '@/api/article';
+import { addArticle, updateArticle, getArticle } from '@/api/article';
 export default {
   middleware: 'authenticated',
   name: 'EditorPage',
@@ -64,13 +64,24 @@ export default {
         description: '',
         body: '',
         tagList: "",
-      }
+      },
+      slug: this.$route.params.slug
     }
   },
+  mounted() {
+    this.slug && this.getArticleBySlug()
+  },
   methods: {
+    async getArticleBySlug() {
+      const { data } = await getArticle(this.slug)
+      this.article = data.article
+      this.article.tagList = this.article.tagList.join(',')
+    },
     async submitArticle() {
       this.article.tagList = this.article.tagList.split(',')
-      const { data } = await addArticle({ article: this.article })
+      const { data } = this.slug
+        ? await updateArticle({ slug: this.slug, article: this.article })
+        : await addArticle({ article: this.article })
       const { article } = data || {}
       if (article && article.slug) {
         this.$router.push({
