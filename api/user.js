@@ -15,3 +15,10 @@ export const register = (data) =>
 		method: "POST",
 		data,
 	})
+
+// 获取用户信息
+export const getProfile = (username) =>
+	request({
+		url: `/api/profiles/${username}`,
+		method: "GET",
+	})
