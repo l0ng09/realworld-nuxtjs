@@ -6,10 +6,13 @@
           <div class="col-xs-12 col-md-10 offset-md-1">
             <img :src="profile.image" class="user-img" />
             <h4>{{ profile.username }}</h4>
-            <button class="btn btn-sm btn-outline-secondary action-btn">
+            <nuxt-link
+              to="/settings"
+              class="btn btn-sm btn-outline-secondary action-btn"
+            >
               <i class="ion-plus-round"></i>
               &nbsp;Edit Profile Settings
-            </button>
+            </nuxt-link>
           </div>
         </div>
       </div>

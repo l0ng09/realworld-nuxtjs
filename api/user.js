@@ -16,9 +16,25 @@ export const register = (data) =>
 		data,
 	})
 
-// 获取用户信息
+// 获取用户主页
 export const getProfile = (username) =>
 	request({
 		url: `/api/profiles/${username}`,
 		method: "GET",
+	})
+
+// 获取用户信息
+export const getUser = (data) =>
+	request({
+		url: "/api/user",
+		method: "GET",
+	})
+
+
+// 更新用户信息
+export const updateUser = (data) =>
+	request({
+		url: "/api/user",
+		method: "PUT",
+		data,
 	})
