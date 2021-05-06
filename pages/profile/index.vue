@@ -7,12 +7,24 @@
             <img :src="profile.image" class="user-img" />
             <h4>{{ profile.username }}</h4>
             <nuxt-link
+              v-if="user.username === profile.username"
               to="/settings"
               class="btn btn-sm btn-outline-secondary action-btn"
             >
               <i class="ion-plus-round"></i>
               &nbsp;Edit Profile Settings
             </nuxt-link>
+
+            <button
+              v-else
+              class="btn btn-sm action-btn ng-binding btn-secondary"
+              :class="{ active: profile.following }"
+              @click="onFollow(profile)"
+            >
+              <i class="ion-plus-round"></i>
+              &nbsp; {{ profile.following ? "Unfollow" : "Follow" }}
+              {{ profile.username }}
+            </button>
           </div>
         </div>
       </div>
@@ -112,7 +124,8 @@
 </template>
 
 <script>
-import { getProfile } from '@/api/user';
+import { getProfile, followUser, unFollowUser } from '@/api/user';
+import { mapState } from 'vuex';
 import { getArticles, addFavorite, deleteFavorite } from '@/api/article';
 export default {
   middleware: 'authenticated',
@@ -134,6 +147,7 @@ export default {
     "$route.params.username": "init"
   },
   computed: {
+    ...mapState(['user']),
     username() {
       const { username } = this.$route.params
       return username
@@ -175,14 +189,23 @@ export default {
       this.page = 1
       this.fetchArticleByTab()
     },
-    onFavorite(article) {
+    async onFollow(profile) {
+      if (profile.following) {
+        await unFollowUser(profile.username)
+        profile.following = false
+      } else {
+        await followUser(profile.username)
+        profile.following = true
+      }
+    },
+    async onFavorite(article) {
       article.disableFavorite = true
       if (article.favorited) {
-        deleteFavorite(article.slug)
+        await deleteFavorite(article.slug)
         article.favorited = false
         article.favoritesCount -= 1
       } else {
-        addFavorite(article.slug)
+        await addFavorite(article.slug)
         article.favorited = true
         article.favoritesCount += 1
       }

@@ -38,3 +38,18 @@ export const updateUser = (data) =>
 		method: "PUT",
 		data,
 	})
+
+
+// Follow user
+export const followUser = (username) =>
+	request({
+		url: `/api/profiles/${username}/follow`,
+		method: "POST",
+	})
+
+// Unfollow user
+export const unFollowUser = (username) =>
+	request({
+		url: `/api/profiles/${username}/follow`,
+		method: "DELETE",
+	})

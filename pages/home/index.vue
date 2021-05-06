@@ -201,14 +201,14 @@ export default {
     }
   },
   methods: {
-    onFavorite(article) {
+    async onFavorite(article) {
       article.disableFavorite = true
       if (article.favorited) {
-        deleteFavorite(article.slug)
+        await deleteFavorite(article.slug)
         article.favorited = false
         article.favoritesCount -= 1
       } else {
-        addFavorite(article.slug)
+        await addFavorite(article.slug)
         article.favorited = true
         article.favoritesCount += 1
       }
