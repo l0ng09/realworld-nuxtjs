@@ -9,5 +9,5 @@ https://github.com/gothinkster/realworld/tree/master/api
 
 
 
-## 采坑摘要
+## 踩坑摘要
 - 放在 static 中的资源，在 app.html 中直接用 / 引入，不需要加 static
