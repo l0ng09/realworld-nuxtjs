@@ -68,7 +68,7 @@ export default {
 	},
 	// 部署到服务器上需要配置相应的端口号
 	server: {
-    port: 3000,  // 这里默认是 3000 端口
+    port: 80,  // 这里默认是 3000 端口
     host: '0.0.0.0',  // 这里默认是 localhost
     timing: false
   },
