@@ -11,6 +11,7 @@
                   class="form-control form-control-lg"
                   placeholder="Article Title"
                   v-model="article.title"
+                  onkeydown="if(event.keyCode === 13) return false"
                   required
                 />
               </fieldset>
@@ -20,6 +21,7 @@
                   class="form-control"
                   placeholder="What's this article about ?"
                   v-model="article.description"
+                  onkeydown="if(event.keyCode === 13) return false"
                   required
                 />
               </fieldset>
@@ -29,6 +31,7 @@
                   rows="8"
                   placeholder="Write your article ( in markdown )"
                   v-model="article.body"
+                  onkeydown="if(event.keyCode === 13) return false"
                   required
                 ></textarea>
               </fieldset>
@@ -36,10 +39,23 @@
                 <input
                   type="text"
                   class="form-control"
-                  placeholder='Multiple tags split with " , "'
-                  v-model="article.tagList"
+                  placeholder="Enter tags"
+                  v-model="article.tag"
+                  onkeydown="if(event.keyCode === 13) return false"
+                  @keyup.enter="onTagChange"
                 />
-                <div class="tag-list"></div>
+                <div class="tag-list">
+                  <span
+                    class="tag-default tag-pill"
+                    v-for="tag in article.tagList"
+                  >
+                    <i
+                      class="ion-close-round"
+                      @click="() => removeTag(tag)"
+                    ></i>
+                    {{ tag }}
+                  </span>
+                </div>
               </fieldset>
               <button class="btn btn-lg pull-xs-right btn-primary">
                 Publish Article
@@ -63,7 +79,8 @@ export default {
         title: '',
         description: '',
         body: '',
-        tagList: "",
+        tagList: [],
+        tag: '',
       },
       slug: this.$route.params.slug
     }
@@ -75,10 +92,9 @@ export default {
     async getArticleBySlug() {
       const { data } = await getArticle(this.slug)
       this.article = data.article
-      this.article.tagList = this.article.tagList.join(',')
+      this.article.tag = ''
     },
     async submitArticle() {
-      this.article.tagList = this.article.tagList.split(',')
       const { data } = this.slug
         ? await updateArticle({ slug: this.slug, article: this.article })
         : await addArticle({ article: this.article })
@@ -91,6 +107,16 @@ export default {
           }
         })
       }
+    },
+    onTagChange(event) {
+      if (event.keyCode === 13) {
+        this.article.tag = ''
+        this.article.tagList.push(event.target.value)
+      }
+    },
+    removeTag(tag) {
+      const restTags = this.article.tagList.filter(item => item !== tag)
+      this.article.tagList = restTags
     }
   }
 }
